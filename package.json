@@ -1,0 +1,54 @@
+{
+	"name": "next-pwa-template",
+	"version": "0.0.0",
+	"license": "MIT",
+	"scripts": {
+		"dev": "npm-run-all --parallel dev:backend dev:frontend",
+		"dev:backend": "convex dev",
+		"dev:frontend": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@clerk/clerk-react": "^5.4.0",
+		"@clerk/nextjs": "^5.3.0",
+		"clsx": "^2.1.1",
+		"convex": "^1.14.0",
+		"framer-motion": "^11.3.24",
+		"lucide-react": "^0.426.0",
+		"next": "14.2.5",
+		"next-pwa": "^5.6.0",
+		"next-themes": "^0.3.0",
+		"npm-run-all": "^4.1.5",
+		"ramda": "^0.30.1",
+		"react": "18.3.1",
+		"react-dom": "18.3.1",
+		"react-hot-toast": "^2.4.1",
+		"tailwind-merge": "^2.5.0",
+		"ts-pattern": "^5.2.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.8.3",
+		"@tailwindcss/typography": "^0.5.14",
+		"@types/node": "^22.1.0",
+		"@types/ramda": "^0.27.66",
+		"@types/react": "^18.3.3",
+		"autoprefixer": "^10.4.20",
+		"eslint": "^9.8.0",
+		"eslint-config-next": "^14.2.5",
+		"eslint-config-prettier": "^9.1.0",
+		"postcss": "^8.4.41",
+		"prettier": "^3.3.3",
+		"prettier-plugin-tailwindcss": "^0.6.5",
+		"tailwindcss": "^3.4.9",
+		"tailwindcss-safe-area": "^0.5.1",
+		"typescript": "^5.5.4"
+	},
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"jsxSingleQuote": true,
+		"useTabs": true
+	}
+}
