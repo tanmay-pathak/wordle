@@ -256,7 +256,7 @@ const Index = () => {
 
 	const handleHint = async () => {
 		const { hint } = await getHint(secretWord.word);
-		toast.success(`Your hint is: ${hint}`, { duration: 5000 });
+		toast.success(`Your hint is: ${hint}`, { duration: 10000 });
 	};
 
 	return (
