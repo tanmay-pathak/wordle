@@ -266,7 +266,7 @@ const Index = () => {
 				</div>
 			)}
 			<div className="flex flex-col justify-between sm:gap-10 min-h-[65vh]">
-				{gameData.finished && process.env.NEXT_PUBLIC_ALLOW_RESTART && (
+				{gameData.finished && (
 					<div className="absolute top-35 sm:top-20 inset-0 flex items-center justify-center bg-opacity-100 z-20 mx-4">
 						<div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
 							<section className="prose prose-sm sm:prose-lg max-w-none mb-4">
