@@ -3,9 +3,9 @@ import { Html, Head, Main, NextScript } from "next/document";
 let title = "Wordle with Friends";
 let description =
 	"Team up with your crew, climb the leaderboards, and conquer Wordle together!";
-let url = "https://tudle.vercel.app";
-let ogimage = "https://r2.tanmaypathak.com/tudle-og.jpg";
-let sitename = "tudle.vercel.app";
+let url = "https://wordle-one-lac.vercel.app";
+let ogimage = "https://r2.tanmaypathak.com/wordle-og-image.jpg";
+let sitename = "wordle-one-lac.vercel.app";
 const icon = "/favicon.ico";
 
 export default function Document() {
