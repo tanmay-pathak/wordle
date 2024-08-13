@@ -1,8 +1,8 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
-let title = "tudle";
+let title = "Wordle with Friends";
 let description =
-	"Team up with your crew, climb the leaderboards, and conquer tudle together!";
+	"Team up with your crew, climb the leaderboards, and conquer Wordle together!";
 let url = "https://tudle.vercel.app";
 let ogimage = "https://r2.tanmaypathak.com/tudle-og.jpg";
 let sitename = "tudle.vercel.app";

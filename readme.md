@@ -1,6 +1,6 @@
-# tudle
+# Wordle with Friends
 
-tudle is a fun Wordle clone. It features team play, leaderboards, and more! This app is built using Next.js, Convex, and Clerk, and it's deployed on Vercel.
+This is a fun Wordle clone. It features team play, leaderboards, and more! This app is built using Next.js, Convex, and Clerk, and it's deployed on Vercel.
 
 ## Features
 
@@ -18,7 +18,7 @@ tudle is a fun Wordle clone. It features team play, leaderboards, and more! This
 
 ## Getting Started
 
-To get started with tudle, follow these steps:
+To get started with Wordle with Friends, follow these steps:
 
 ### Prerequisites
 
@@ -30,7 +30,7 @@ To get started with tudle, follow these steps:
 
 ### Deployment
 
-tudle is deployed on Vercel. You can deploy your own instance by following these steps:
+Wordle with Friends is deployed on Vercel. You can deploy your own instance by following these steps:
 
 1. **Deploy to Vercel**:
    - Connect your GitHub repository to Vercel.

@@ -5,7 +5,7 @@ const Info = () => {
 	return (
 		<Page>
 			<section className="prose prose-sm sm:prose-lg max-w-none">
-				<h1>How to Play tudle</h1>
+				<h1>How to Play Wordle with Friends</h1>
 				<p>
 					The objective is to guess a hidden {NUMBER_OF_LETTERS}-letter word
 					within {NUMBER_OF_TRIES} attempts. Here are the rules:

@@ -78,12 +78,12 @@ const Index = () => {
 				<div className="absolute top-35 sm:top-20 inset-0 flex items-center justify-center bg-opacity-100 z-20 mx-4">
 					<div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
 						<section className="prose prose-sm sm:prose-lg max-w-none mb-4">
-							<h1>Welcome to tudle</h1>
+							<h1>Welcome to Wordle with Friends</h1>
 							<p>
-								tudle is a simple yet addictive word puzzle game with the same{" "}
+								Wordle with Friends is a simple yet addictive word puzzle game with the same{" "}
 								<a href="/info">rules</a> as the classic game Wordle.
 							</p>
-							<h3>How is tudle different from Wordle?</h3>
+							<h3>How is Wordle with Friends different from Wordle?</h3>
 							<ol>
 								<li>
 									You play alongside your mates in <b>real-time</b>. You know

@@ -1,6 +1,6 @@
 {
-	"name": "tudle",
-	"short_name": "tudle",
+	"name": "Wordle with Friends",
+	"short_name": "Wordle with Friends",
 	"theme_color": "#000",
 	"background_color": "#fff",
 	"display": "standalone",

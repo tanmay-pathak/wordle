@@ -10,7 +10,7 @@ const Page = ({ title, children }: Props) => (
 	<>
 		{title ? (
 			<Head>
-				<title>tudle | {title}</title>
+				<title>Wordle with Friends | {title}</title>
 			</Head>
 		) : null}
 
