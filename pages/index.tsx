@@ -80,8 +80,9 @@ const Index = () => {
 						<section className="prose prose-sm sm:prose-lg max-w-none mb-4">
 							<h1>Welcome to Wordle with Friends</h1>
 							<p>
-								Wordle with Friends is a simple yet addictive word puzzle game with the same{" "}
-								<a href="/info">rules</a> as the classic game Wordle.
+								Wordle with Friends is a simple yet addictive word puzzle game
+								with the same <a href="/info">rules</a> as the classic game
+								Wordle.
 							</p>
 							<h3>How is Wordle with Friends different from Wordle?</h3>
 							<ol>

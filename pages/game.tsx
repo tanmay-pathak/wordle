@@ -7,12 +7,14 @@ import { api } from "@/convex/_generated/api";
 import { NUMBER_OF_LETTERS } from "@/convex/constants";
 import {
 	findLastNonEmptyTile,
+	getHint,
 	getNextRow,
 	getRowWord,
 	verifyWord,
 } from "@/lib/helper";
 import { useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "convex/react";
+import { MessageCircleQuestion } from "lucide-react";
 import { prop, flatten, reject, propEq, groupBy } from "ramda";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -252,12 +254,17 @@ const Index = () => {
 				a !== undefined && self.findIndex((b) => b?.id === a?.id) === index,
 		);
 
+	const handleHint = async () => {
+		const { hint } = await getHint(secretWord.word);
+		toast.success(`Your hint is: ${hint}`, { duration: 5000 });
+	};
+
 	return (
 		<Page>
 			{people && people.length > 0 && (
 				<div className="mb-2 sm:mb-0">
 					<div className="prose prose-sm sm:prose-lg max-w-none">
-						<h4 className="text-center">Played Today</h4>
+						<h4 className="text-center">Played Today:</h4>
 					</div>
 					<div className="flex flex-row items-center justify-center w-full">
 						{/* @ts-ignore Type issue */}
@@ -265,7 +272,12 @@ const Index = () => {
 					</div>
 				</div>
 			)}
-			<div className="flex flex-col justify-between sm:gap-10 min-h-[65vh]">
+			<div className="flex justify-center my-1">
+				<button className="flex gap-1" onClick={handleHint}>
+					Need a hint? <MessageCircleQuestion />
+				</button>
+			</div>
+			<div className="flex flex-col justify-between gap-2 sm:gap-10 min-h-[65vh]">
 				{gameData.finished && (
 					<div className="absolute top-35 sm:top-20 inset-0 flex items-center justify-center bg-opacity-100 z-20 mx-4">
 						<div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">

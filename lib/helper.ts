@@ -1,6 +1,7 @@
 import { VerifyApiResponse } from "@/pages/api/verify/[word]";
 import { GameTile } from "./types";
 import { without } from "ramda";
+import { HintApiResponse } from "@/pages/api/hint/[word]";
 
 export function findLastNonEmptyTile(row: GameTile[]) {
 	return row.reduce<GameTile | null>(
@@ -75,5 +76,11 @@ export function getNextRow(row: GameTile[], secret: string) {
 export async function verifyWord(word: string) {
 	return await fetch(`/api/verify/${word}`).then(
 		(x) => x.json() as Promise<VerifyApiResponse>,
+	);
+}
+
+export async function getHint(word: string) {
+	return await fetch(`/api/hint/${word}`).then(
+		(x) => x.json() as Promise<HintApiResponse>,
 	);
 }

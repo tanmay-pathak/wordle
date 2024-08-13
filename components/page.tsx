@@ -23,7 +23,7 @@ const Page = ({ title, children }: Props) => (
 			 */
 			className="mx-auto max-w-screen-md pt-20 px-safe sm:pb-0"
 		>
-			<div className="p-6">{children}</div>
+			<div className="p-3">{children}</div>
 		</main>
 	</>
 );
