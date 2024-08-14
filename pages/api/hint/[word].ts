@@ -21,7 +21,7 @@ export default async function handler(
 			},
 			{ role: "user", content: word },
 		],
-		model: "gpt-4o-mini",
+		model: "gpt-4o",
 	});
 	const hint = completion.choices[0].message.content;
 
