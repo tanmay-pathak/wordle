@@ -18,11 +18,12 @@ import { MessageCircleQuestion } from "lucide-react";
 import { prop, flatten, reject, propEq, groupBy } from "ramda";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 const Index = () => {
 	const currentDate = new Date()
 		.toLocaleString("en-US", { timeZone: "America/Regina" })
-		.split(",")[0];
+			.split(",")[0];
 	let gameData = useQuery(api.game.get, { date: currentDate });
 	const secretWord = useQuery(api.secretWord.get);
 	const setGameData = useMutation(api.game.set);
@@ -254,9 +255,19 @@ const Index = () => {
 				a !== undefined && self.findIndex((b) => b?.id === a?.id) === index,
 		);
 
+	const [isHintLoading, setIsHintLoading] = useState(false);
+
 	const handleHint = async () => {
-		const { hint } = await getHint(secretWord.word);
-		toast.success(`Your hint is: ${hint}`, { duration: 10000 });
+		setIsHintLoading(true);
+		try {
+			const { hint } = await getHint(secretWord.word);
+			toast.success(`Your hint is: ${hint}`, { duration: 10000 });
+		} catch (error) {
+			console.error("Error fetching hint:", error);
+			toast.error("Failed to get hint. Please try again.");
+		} finally {
+			setIsHintLoading(false);
+		}
 	};
 
 	return (
@@ -273,8 +284,21 @@ const Index = () => {
 				</div>
 			)}
 			<div className="flex justify-center my-1">
-				<button className="flex gap-1" onClick={handleHint}>
-					Need a hint? <MessageCircleQuestion />
+				<button
+					className="flex gap-1 items-center"
+					onClick={handleHint}
+					disabled={isHintLoading}
+				>
+					{isHintLoading ? (
+						<>
+							<Loader2 className="w-4 h-4 animate-spin" />
+							Loading...
+						</>
+					) : (
+						<>
+							Need a hint? <MessageCircleQuestion />
+						</>
+					)}
 				</button>
 			</div>
 			<div className="flex flex-col justify-between gap-2 sm:gap-10 min-h-[65vh]">
