@@ -9,10 +9,10 @@ const Download = () => {
 				<p>For easy access, add this website to your homescreen.</p>
 				<div className="gap-2">
 					<img
-						src="https://r2.tanmaypathak.com/tudle-screenshot-1.png"
+						src="https://r2.tanmaypathak.com/wordle-screenshot-1.png"
 						className="object-contain"
 					/>
-					<img src="https://r2.tanmaypathak.com/tudle-screenshot-2.png" />
+					<img src="https://r2.tanmaypathak.com/zudle-screenshot-2.png" />
 				</div>
 			</section>
 		</Page>
