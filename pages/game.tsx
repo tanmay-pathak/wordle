@@ -283,7 +283,7 @@ const Index = () => {
 					</div>
 				</div>
 			)}
-			<div className="flex justify-center my-1">
+			<div className="flex justify-center my-2 sm:py-4">
 				<button
 					className="flex gap-1 items-center"
 					onClick={handleHint}

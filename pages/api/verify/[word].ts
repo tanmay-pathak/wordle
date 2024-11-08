@@ -13,7 +13,7 @@ export default function handler(
 	const word = String(req.query.word);
 
 	const valid =
-		word && word.length === NUMBER_OF_LETTERS ? WORDS.includes(word) : false;
+		word && word.length === NUMBER_OF_LETTERS ? WORDS.includes(word.toLowerCase()) : false;
 
 	res.status(200).json({ valid });
 }

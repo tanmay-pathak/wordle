@@ -1,6 +1,5 @@
 import Loading from "@/components/loading";
 import Page from "@/components/page";
-import Section from "@/components/section";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 
