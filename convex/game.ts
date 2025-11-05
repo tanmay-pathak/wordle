@@ -21,17 +21,12 @@ async function getCurrentGameDate(db: DatabaseReader) {
 	const today = saskatoonTime
 		.toLocaleString('en-US', { timeZone: 'America/Regina' })
 		.split(',')[0]
-	const startRecord = await db
-		.query('gameStartTime')
+	// Check if today's game exists, if not return yesterday's date
+	const todayGame = await db
+		.query('game')
 		.withIndex('by_date', (q) => q.eq('date', today))
 		.first()
-	const [startHour, startMinute] = startRecord?.time
-		? startRecord.time.split(':').map(Number)
-		: [10, 0]
-	const startMinutes = startHour * 60 + startMinute
-	const currentMinutes =
-		saskatoonTime.getHours() * 60 + saskatoonTime.getMinutes()
-	if (currentMinutes < startMinutes) {
+	if (!todayGame) {
 		const yesterday = new Date(saskatoonTime)
 		yesterday.setDate(yesterday.getDate() - 1)
 		return yesterday
@@ -292,56 +287,11 @@ export const verifyGuess = mutationWithUser({
 	},
 })
 
-export const assignStartTime = internalMutation({
-	args: {},
-	handler: async (ctx) => {
-		const date = new Date()
-			.toLocaleString('en-US', { timeZone: 'America/Regina' })
-			.split(',')[0]
-		const minutes = Math.floor(Math.random() * ((15 - 9) * 60 + 1)) + 9 * 60
-		const hour = Math.floor(minutes / 60)
-		const minute = minutes % 60
-		const time = `${hour.toString().padStart(2, '0')}:${minute
-			.toString()
-			.padStart(2, '0')}`
-		const existing = await ctx.db
-			.query('gameStartTime')
-			.withIndex('by_date', (q) => q.eq('date', date))
-			.first()
-		if (existing) {
-			await ctx.db.patch(existing._id, { time })
-		} else {
-			await ctx.db.insert('gameStartTime', { date, time })
-		}
-
-		const [month, day, year] = date.split('/')
-		const startDate = new Date(
-			Date.UTC(Number(year), Number(month) - 1, Number(day), hour + 6, minute),
-		)
-		const remindAt = new Date(startDate.getTime() - 15 * 60 * 1000)
-		await ctx.scheduler.runAt(remindAt, internal.reminders.sendStartReminder, {
-			date,
-		})
-
-		const reminderAt = new Date(startDate.getTime() + 3 * 60 * 60 * 1000)
-		await ctx.scheduler.runAt(
-			reminderAt,
-			internal.reminders.sendDailyReminder,
-			{ date },
-		)
-	},
-})
-
 export const getStartTime = queryWithUser({
 	args: {},
-	handler: async (ctx) => {
-		const date = new Date()
-			.toLocaleString('en-US', { timeZone: 'America/Regina' })
-			.split(',')[0]
-		const record = await ctx.db
-			.query('gameStartTime')
-			.withIndex('by_date', (q) => q.eq('date', date))
-			.first()
-		return record?.time ?? '10:00'
+	handler: async () => {
+		// Games are created daily at midnight Regina time (6 AM UTC)
+		// Return midnight for the next day
+		return '00:00'
 	},
 })

@@ -17,11 +17,4 @@ crons.cron(
 	{},
 )
 
-crons.cron(
-	'Assign Daily Start Time',
-	'0 6 * * *', // Run daily at 6 AM UTC (approx midnight Regina)
-	internal.game.assignStartTime,
-	{},
-)
-
 export default crons

@@ -46,10 +46,6 @@ export default defineSchema({
 		submittedUsers: v.optional(v.array(v.string())),
 		trashTalk: v.optional(v.string()),
 	}).index('by_date', ['date']),
-	gameStartTime: defineTable({
-		date: v.string(),
-		time: v.string(),
-	}).index('by_date', ['date']),
 	winners: defineTable({
 		date: v.string(),
 		word: v.string(),
