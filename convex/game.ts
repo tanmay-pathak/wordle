@@ -2,7 +2,7 @@ import { v } from 'convex/values'
 import { internalMutation, type DatabaseReader } from './_generated/server'
 import { NUMBER_OF_TRIES } from './constants'
 import { NUMBER_OF_LETTERS } from './constants'
-import { mutationWithUser, queryWithUser } from './utils'
+import { mutationWithUser, queryWithUser, actionWithUser } from './utils'
 import { WORDS } from './lib/six_letter_words'
 import { api } from './_generated/api'
 import {
@@ -12,6 +12,7 @@ import {
 	getNextRow,
 } from './helpers'
 import { internal } from './_generated/api'
+import { Id } from './_generated/dataModel'
 
 async function getCurrentGameDate(db: DatabaseReader) {
 	const now = new Date()
@@ -89,6 +90,22 @@ export const createGame = internalMutation({
 			submittedUsers: [],
 		}
 		return await ctx.db.insert('game', game)
+	},
+})
+
+export const createNewGame = actionWithUser({
+	args: {},
+	returns: v.id('game'),
+	handler: async (ctx) => {
+		const allowManualCreation = process.env.ALLOW_MANUAL_GAME_CREATION
+		if (allowManualCreation !== 'true') {
+			throw new Error('Manual game creation is not enabled')
+		}
+
+		await ctx.runAction(internal.words.assignDailyWord, {})		
+		const gameId: Id<'game'> = await ctx.runMutation(internal.game.createGame, {})
+		
+		return gameId
 	},
 })
 

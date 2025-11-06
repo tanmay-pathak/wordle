@@ -6,7 +6,7 @@ import { api } from '@/convex/_generated/api'
 import { NUMBER_OF_LETTERS } from '@/convex/constants'
 import { findLastNonEmptyTile, getRowWord } from '@/convex/lib/helper'
 import { useUser } from '@clerk/clerk-react'
-import { useMutation, useQuery } from 'convex/react'
+import { useMutation, useQuery, useAction } from 'convex/react'
 import { prop, flatten, reject, propEq, groupBy } from 'ramda'
 import toast, { Toaster } from 'react-hot-toast'
 import { motion } from 'framer-motion'
@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react'
 import { usePartySocket } from 'partysocket/react'
 import type { UserPayload } from '@/party/types'
 import LiveCursors from '@/components/game/LiveCursors'
+import { Button } from '@/components/ui/button'
 
 // Time Remaining component
 const TimeRemaining = () => {
@@ -74,6 +75,7 @@ const GamePage = () => {
 			})
 		: ''
 	const verifyGuess = useMutation(api.game.verifyGuess)
+	const createNewGameAction = useAction(api.game.createNewGame)
 	const setGameData = useMutation(api.game.set).withOptimisticUpdate(
 		(localStore, args) => {
 			const currentGameData = localStore.getQuery(api.game.get)
@@ -456,6 +458,41 @@ const GamePage = () => {
 			<LiveCursors activeUsers={activeUsers} />
 
 			<div className='min-h-[calc(100vh-8rem)] flex flex-col pb-1 sm:pb-0 p-safe'>
+				{process.env.NEXT_PUBLIC_ALLOW_MANUAL_GAME_CREATION === 'true' && 
+					gameData?.finished && (
+					<div className='flex justify-end mb-4 px-4'>
+						<Button
+							variant='outline'
+							size='sm'
+							onClick={async () => {
+								try {
+									await createNewGameAction()
+									toast.success('New game created!', {
+										icon: '🎮',
+										style: {
+											borderRadius: '10px',
+											background: '#22c55e',
+											color: '#fff',
+										},
+									})
+								} catch (error) {
+									console.error('Failed to create new game:', error)
+									const errorMessage = error instanceof Error ? error.message : 'Failed to create new game'
+									toast.error(errorMessage, {
+										icon: '⚠️',
+										style: {
+											borderRadius: '10px',
+											background: '#333',
+											color: '#fff',
+										},
+									})
+								}
+							}}
+						>
+							Create New Game
+						</Button>
+					</div>
+				)}
 				<Participants activeUsers={activeUsers} />
 
 				{gameData.finished && (
