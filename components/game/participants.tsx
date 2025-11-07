@@ -22,7 +22,7 @@ const Participants: React.FC<ParticipantsProps> = ({ activeUsers = [] }) => {
 		<motion.div
 			initial={{ opacity: 0, y: -20 }}
 			animate={{ opacity: 1, y: 0 }}
-			transition={{ delay: 0.2 }}
+			transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
 			className='mb-3 sm:mb-4 bg-white dark:bg-zinc-800 rounded-xl shadow-lg hover:shadow-xl border border-gray-200 dark:border-zinc-700 transition-all duration-300 overflow-hidden'
 		>
 			<div className='p-4 sm:p-5'>
@@ -30,59 +30,80 @@ const Participants: React.FC<ParticipantsProps> = ({ activeUsers = [] }) => {
 				<div className='flex items-center justify-between mb-4'>
 					<div className='flex items-center gap-3'>
 						<motion.div
-							initial={{ scale: 0 }}
-							animate={{ scale: 1 }}
-							transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
+							initial={{ scale: 0, rotate: -180 }}
+							animate={{ scale: 1, rotate: 0 }}
+							transition={{ 
+								type: 'spring', 
+								stiffness: 200, 
+								damping: 15,
+								delay: 0.1
+							}}
 							className='relative'
 						>
 							<div className='bg-brand-orange p-2.5 rounded-lg shadow-md'>
 								<Users className='w-5 h-5 text-white' />
 							</div>
-							{onlineCount > 0 && (
-								<motion.div
-									initial={{ scale: 0 }}
-									animate={{ scale: 1 }}
-									transition={{ delay: 0.4, type: 'spring', stiffness: 300 }}
-									className='absolute -top-1 -right-1 bg-brand-orange text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg border-2 border-white dark:border-zinc-800'
-								>
-									{onlineCount}
-								</motion.div>
-							)}
+							<AnimatePresence>
+								{onlineCount > 0 && (
+									<motion.div
+										initial={{ scale: 0, opacity: 0 }}
+										animate={{ scale: 1, opacity: 1 }}
+										exit={{ scale: 0, opacity: 0 }}
+										transition={{ 
+											type: 'spring', 
+											stiffness: 300, 
+											damping: 20,
+											delay: 0.2
+										}}
+										className='absolute -top-1 -right-1 bg-brand-orange text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg border-2 border-white dark:border-zinc-800'
+									>
+										{onlineCount}
+									</motion.div>
+								)}
+							</AnimatePresence>
 						</motion.div>
 						<div>
 							<motion.p
 								initial={{ opacity: 0, x: -10 }}
 								animate={{ opacity: 1, x: 0 }}
-								transition={{ delay: 0.35 }}
+								transition={{ duration: 0.3, delay: 0.15 }}
 								className='text-sm font-semibold text-zinc-800 dark:text-zinc-100'
 							>
 								Online Players
 							</motion.p>
-							<motion.p
-								initial={{ opacity: 0, x: -10 }}
-								animate={{ opacity: 1, x: 0 }}
-								transition={{ delay: 0.4 }}
-								className='text-xs text-zinc-500 dark:text-zinc-400 mt-0.5'
-							>
-								{onlineCount === 0
-									? 'Waiting for players...'
-									: onlineCount === 1
-										? '1 player active'
-										: `${onlineCount} players active`}
-							</motion.p>
+							<AnimatePresence mode='wait'>
+								<motion.p
+									key={onlineCount}
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									transition={{ duration: 0.2 }}
+									className='text-xs text-zinc-500 dark:text-zinc-400 mt-0.5'
+								>
+									{onlineCount === 0
+										? 'Waiting for players...'
+										: onlineCount === 1
+											? '1 player active'
+											: `${onlineCount} players active`}
+								</motion.p>
+							</AnimatePresence>
 						</div>
 					</div>
 				</div>
 
 				{/* Active Users Avatars Section */}
-				<AnimatePresence mode='wait'>
+				<AnimatePresence mode='popLayout'>
 					{onlineCount > 0 ? (
 						<motion.div
 							key='users-list'
-							initial={{ opacity: 0, height: 0 }}
-							animate={{ opacity: 1, height: 'auto' }}
-							exit={{ opacity: 0, height: 0 }}
-							transition={{ delay: 0.2, duration: 0.3 }}
+							initial={{ opacity: 0, y: -10 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -10 }}
+							transition={{ 
+								duration: 0.3,
+								ease: [0.4, 0, 0.2, 1]
+							}}
+							layout
 							className='overflow-hidden'
 						>
 							<div className='flex items-center gap-3 p-3 bg-gray-100 dark:bg-zinc-700/50 rounded-lg border border-gray-200 dark:border-zinc-600'>
@@ -99,16 +120,22 @@ const Participants: React.FC<ParticipantsProps> = ({ activeUsers = [] }) => {
 									<div className='flex items-center min-w-0'>
 										<AnimatedTooltip items={tooltipItems} />
 									</div>
-									{onlineCount > 5 && (
-										<motion.div
-											initial={{ opacity: 0, scale: 0.8 }}
-											animate={{ opacity: 1, scale: 1 }}
-											transition={{ delay: 0.5 }}
-											className='text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-2 py-1 bg-white dark:bg-zinc-800 rounded-full border border-gray-200 dark:border-zinc-600'
-										>
-											+{onlineCount - 5}
-										</motion.div>
-									)}
+									<AnimatePresence>
+										{onlineCount > 5 && (
+											<motion.div
+												initial={{ opacity: 0, scale: 0.8, x: -10 }}
+												animate={{ opacity: 1, scale: 1, x: 0 }}
+												exit={{ opacity: 0, scale: 0.8, x: -10 }}
+												transition={{ 
+													duration: 0.2,
+													ease: [0.4, 0, 0.2, 1]
+												}}
+												className='text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-2 py-1 bg-white dark:bg-zinc-800 rounded-full border border-gray-200 dark:border-zinc-600'
+											>
+												+{onlineCount - 5}
+											</motion.div>
+										)}
+									</AnimatePresence>
 								</div>
 							</div>
 						</motion.div>
@@ -118,12 +145,20 @@ const Participants: React.FC<ParticipantsProps> = ({ activeUsers = [] }) => {
 							initial={{ opacity: 0, scale: 0.95 }}
 							animate={{ opacity: 1, scale: 1 }}
 							exit={{ opacity: 0, scale: 0.95 }}
-							transition={{ delay: 0.2 }}
+							transition={{ 
+								duration: 0.3,
+								ease: [0.4, 0, 0.2, 1]
+							}}
+							layout
 							className='flex flex-col items-center justify-center py-6 px-4 bg-gray-50 dark:bg-zinc-900/50 rounded-lg border border-dashed border-gray-300 dark:border-zinc-600'
 						>
 							<motion.div
 								animate={{ y: [0, -5, 0] }}
-								transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+								transition={{ 
+									repeat: Infinity, 
+									duration: 2, 
+									ease: 'easeInOut' 
+								}}
 								className='mb-2'
 							>
 								<UserPlus className='w-8 h-8 text-zinc-400 dark:text-zinc-500' />
