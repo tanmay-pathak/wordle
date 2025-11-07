@@ -13,3 +13,4 @@ export type Message =
 	| { type: 'add-user'; payload: UserPayload }
 	| { type: 'update-cursor'; payload: Pick<UserPayload, 'id' | 'cursor'> }
 	| { type: 'presence'; payload: { users: Array<UserPayload> } }
+	| { type: 'reaction'; payload: { emoji: string; userId: string; userName: string; userAvatar: string } }

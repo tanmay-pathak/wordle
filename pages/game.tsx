@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react'
 import { usePartySocket } from 'partysocket/react'
 import type { UserPayload } from '@/party/types'
 import LiveCursors from '@/components/game/LiveCursors'
+import Reactions from '@/components/game/reactions'
 import { Button } from '@/components/ui/button'
 
 // Time Remaining component
@@ -105,6 +106,15 @@ const GamePage = () => {
 
 	// State for active users
 	const [activeUsers, setActiveUsers] = useState<UserPayload[]>([])
+	const [reactions, setReactions] = useState<
+		Array<{
+			id: string
+			emoji: string
+			userId: string
+			userName: string
+			userAvatar: string
+		}>
+	>([])
 
 	// PartyKit WebSocket connection
 	const socket = usePartySocket({
@@ -137,6 +147,22 @@ const GamePage = () => {
 				const message = JSON.parse(event.data as string)
 				if (message.type === 'presence') {
 					setActiveUsers(message.payload.users)
+				} else if (message.type === 'reaction') {
+					const reactionId = `${Date.now()}-${Math.random()}`
+					setReactions((prev) => [
+						...prev,
+						{
+							id: reactionId,
+							emoji: message.payload.emoji,
+							userId: message.payload.userId,
+							userName: message.payload.userName,
+							userAvatar: message.payload.userAvatar,
+						},
+					])
+					// Remove reaction after animation completes
+					setTimeout(() => {
+						setReactions((prev) => prev.filter((r) => r.id !== reactionId))
+					}, 2000)
 				}
 			}
 		}
@@ -456,6 +482,18 @@ const GamePage = () => {
 		<Page>
 			<Toaster position='top-center' />
 			<LiveCursors activeUsers={activeUsers} />
+			<Reactions
+				socket={socket}
+				reactions={reactions}
+				setReactions={setReactions}
+				currentUserId={user?.id}
+				currentUserName={
+					user?.firstName
+						? `${user.firstName} ${user.lastName || ''}`.trim()
+						: 'Anonymous'
+				}
+				currentUserAvatar={user?.imageUrl}
+			/>
 
 			<div className='min-h-[calc(100vh-8rem)] flex flex-col pb-1 sm:pb-0 p-safe'>
 				{process.env.NEXT_PUBLIC_ALLOW_MANUAL_GAME_CREATION === 'true' && 

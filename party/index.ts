@@ -46,6 +46,12 @@ export default class Server implements Party.Server {
 				})
 				this.updateUsers()
 			}
+		} else if (userMessage.type === 'reaction') {
+			// Broadcast reaction to all connected clients
+			const reactionMessage = JSON.stringify(userMessage)
+			for (const connection of this.party.getConnections<UserPayload>()) {
+				connection.send(reactionMessage)
+			}
 		}
 	}
 
