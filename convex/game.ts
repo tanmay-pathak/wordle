@@ -141,21 +141,31 @@ export const verifyGuess = mutationWithUser({
 		// Get the current game date from the server
 		const date = await getCurrentGameDate(ctx.db)
 
-		// 3. Get current game data
-		const gameData = await ctx.db
-			.query('game')
-			.withIndex('by_date', (q) => q.eq('date', date))
-			.first()
+                // 3. Get current game data
+                const gameData = await ctx.db
+                        .query('game')
+                        .withIndex('by_date', (q) => q.eq('date', date))
+                        .first()
 
-		if (!gameData) {
-			return {
-				status: 'error' as const,
-				message: 'No game data found',
-			}
-		}
+                if (!gameData) {
+                        return {
+                                status: 'error' as const,
+                                message: 'No game data found',
+                        }
+                }
 
-		// 1. Validate the word exists in our word list
-		if (guess.length !== NUMBER_OF_LETTERS) {
+                if (gameData.finished) {
+                        return {
+                                status: gameData.won ? ('win' as const) : ('loss' as const),
+                                gameFinished: true,
+                                word: gameData.wordOfTheDay ?? undefined,
+                                aboutWord: gameData.aboutWord ?? undefined,
+                                message: 'Game already finished',
+                        }
+                }
+
+                // 1. Validate the word exists in our word list
+                if (guess.length !== NUMBER_OF_LETTERS) {
 			return {
 				status: 'invalid_word' as const,
 				message: `Word must be ${NUMBER_OF_LETTERS} letters long`,
