@@ -60,9 +60,8 @@ export const set = mutationWithUser({
 		won: v.boolean(),
 		wordOfTheDay: v.optional(v.string()),
 		aboutWord: v.optional(v.string()),
-		submittedUsers: v.optional(v.array(v.string())),
-		trashTalk: v.optional(v.string()),
-	},
+                trashTalk: v.optional(v.string()),
+        },
 	handler: async (ctx, args) => {
 		const { _id, ...gameData } = args
 		if (!_id) {
@@ -87,10 +86,9 @@ export const createGame = internalMutation({
 			won: false,
 			wordOfTheDay: undefined,
 			aboutWord: undefined,
-			submittedUsers: [],
-		}
-		return await ctx.db.insert('game', game)
-	},
+                }
+                return await ctx.db.insert('game', game)
+        },
 })
 
 export const createNewGame = actionWithUser({
@@ -121,8 +119,7 @@ export const verifyGuess = mutationWithUser({
 			v.literal('loss'),
 			v.literal('invalid_word'),
 			v.literal('error'),
-			v.literal('already_submitted'),
-		),
+                ),
 		message: v.optional(v.string()),
 		gameFinished: v.optional(v.boolean()),
 		newRow: v.optional(v.any()),
@@ -154,15 +151,6 @@ export const verifyGuess = mutationWithUser({
 			return {
 				status: 'error' as const,
 				message: 'No game data found',
-			}
-		}
-
-		// Check if the user has already submitted a guess
-		const submittedUsers = gameData.submittedUsers || []
-		if (submittedUsers.includes(userSubject)) {
-			return {
-				status: 'already_submitted' as const,
-				message: 'You have already submitted a guess today!',
 			}
 		}
 
@@ -216,8 +204,7 @@ export const verifyGuess = mutationWithUser({
 			won: isWin,
 			wordOfTheDay: gameFinished ? secretWord : gameData.wordOfTheDay,
 			aboutWord: gameFinished ? aboutWord : gameData.aboutWord,
-			submittedUsers: [...submittedUsers, userSubject], // Add the current user to submittedUsers
-		}
+                }
 
 		updatedGameData.data[rowIndex] = newRow
 
