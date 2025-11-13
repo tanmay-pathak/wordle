@@ -60,9 +60,8 @@ export const set = mutationWithUser({
 		won: v.boolean(),
 		wordOfTheDay: v.optional(v.string()),
 		aboutWord: v.optional(v.string()),
-		submittedUsers: v.optional(v.array(v.string())),
-		trashTalk: v.optional(v.string()),
-	},
+                trashTalk: v.optional(v.string()),
+        },
 	handler: async (ctx, args) => {
 		const { _id, ...gameData } = args
 		if (!_id) {
@@ -87,10 +86,9 @@ export const createGame = internalMutation({
 			won: false,
 			wordOfTheDay: undefined,
 			aboutWord: undefined,
-			submittedUsers: [],
-		}
-		return await ctx.db.insert('game', game)
-	},
+                }
+                return await ctx.db.insert('game', game)
+        },
 })
 
 export const createNewGame = actionWithUser({
@@ -121,8 +119,7 @@ export const verifyGuess = mutationWithUser({
 			v.literal('loss'),
 			v.literal('invalid_word'),
 			v.literal('error'),
-			v.literal('already_submitted'),
-		),
+                ),
 		message: v.optional(v.string()),
 		gameFinished: v.optional(v.boolean()),
 		newRow: v.optional(v.any()),
@@ -144,30 +141,31 @@ export const verifyGuess = mutationWithUser({
 		// Get the current game date from the server
 		const date = await getCurrentGameDate(ctx.db)
 
-		// 3. Get current game data
-		const gameData = await ctx.db
-			.query('game')
-			.withIndex('by_date', (q) => q.eq('date', date))
-			.first()
+                // 3. Get current game data
+                const gameData = await ctx.db
+                        .query('game')
+                        .withIndex('by_date', (q) => q.eq('date', date))
+                        .first()
 
-		if (!gameData) {
-			return {
-				status: 'error' as const,
-				message: 'No game data found',
-			}
-		}
+                if (!gameData) {
+                        return {
+                                status: 'error' as const,
+                                message: 'No game data found',
+                        }
+                }
 
-		// Check if the user has already submitted a guess
-		const submittedUsers = gameData.submittedUsers || []
-		if (submittedUsers.includes(userSubject)) {
-			return {
-				status: 'already_submitted' as const,
-				message: 'You have already submitted a guess today!',
-			}
-		}
+                if (gameData.finished) {
+                        return {
+                                status: gameData.won ? ('win' as const) : ('loss' as const),
+                                gameFinished: true,
+                                word: gameData.wordOfTheDay ?? undefined,
+                                aboutWord: gameData.aboutWord ?? undefined,
+                                message: 'Game already finished',
+                        }
+                }
 
-		// 1. Validate the word exists in our word list
-		if (guess.length !== NUMBER_OF_LETTERS) {
+                // 1. Validate the word exists in our word list
+                if (guess.length !== NUMBER_OF_LETTERS) {
 			return {
 				status: 'invalid_word' as const,
 				message: `Word must be ${NUMBER_OF_LETTERS} letters long`,
@@ -216,8 +214,7 @@ export const verifyGuess = mutationWithUser({
 			won: isWin,
 			wordOfTheDay: gameFinished ? secretWord : gameData.wordOfTheDay,
 			aboutWord: gameFinished ? aboutWord : gameData.aboutWord,
-			submittedUsers: [...submittedUsers, userSubject], // Add the current user to submittedUsers
-		}
+                }
 
 		updatedGameData.data[rowIndex] = newRow
 

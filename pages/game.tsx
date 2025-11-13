@@ -86,16 +86,14 @@ const GamePage = () => {
 					{},
 					{
 						...args,
-						_id: currentGameData._id,
-						_creationTime: currentGameData._creationTime,
-						aboutWord: args.aboutWord ?? currentGameData.aboutWord,
-						submittedUsers:
-							args.submittedUsers ?? currentGameData.submittedUsers,
-					},
-				)
-			}
-		},
-	)
+                                                _id: currentGameData._id,
+                                                _creationTime: currentGameData._creationTime,
+                                                aboutWord: args.aboutWord ?? currentGameData.aboutWord,
+                                        },
+                                )
+                        }
+                },
+        )
 
 	const { user } = useUser()
 
@@ -229,14 +227,10 @@ const GamePage = () => {
 		)
 	}
 
-	// Check if the current user has already submitted a guess
-	const currentUserHasSubmitted =
-		(user?.id && gameData.submittedUsers?.includes(user.id)) || false
-
-	const handleNewCharacter = async (key: string) => {
-		if (!gameData || gameData.finished || currentUserHasSubmitted) {
-			return
-		}
+        const handleNewCharacter = async (key: string) => {
+                if (!gameData || gameData.finished) {
+                        return
+                }
 
 		const row = gameData.data[gameData.cursor.y]
 		const tile = row[gameData.cursor.x]
@@ -263,10 +257,10 @@ const GamePage = () => {
 		return await setGameData(updatedGameData)
 	}
 
-	const handleDeleteCharacter = async () => {
-		if (!gameData || currentUserHasSubmitted) {
-			return
-		}
+        const handleDeleteCharacter = async () => {
+                if (!gameData) {
+                        return
+                }
 
 		const lastNonEmptyTile = findLastNonEmptyTile(
 			gameData.data[gameData.cursor.y],
@@ -293,11 +287,6 @@ const GamePage = () => {
 
 	const handleEnter = async () => {
 		if (!gameData) {
-			return { status: 'playing', word: undefined }
-		}
-
-		// Check if the current user has already submitted a guess
-		if (currentUserHasSubmitted) {
 			return { status: 'playing', word: undefined }
 		}
 
@@ -332,18 +321,6 @@ const GamePage = () => {
 				return { status: 'playing', word: undefined }
 			}
 
-			if (result.status === 'already_submitted') {
-				toast.error(
-					result.message ||
-						`You have already submitted a guess for the ${formattedDate} puzzle!`,
-					{
-						icon: '🚫',
-						style: { borderRadius: '10px', background: '#333', color: '#fff' },
-					},
-				)
-				return { status: 'playing', word: undefined }
-			}
-
 			// Update game data with the results from server
 			if (result.newRow) {
 				const updatedGameData = structuredClone(gameData)
@@ -357,14 +334,8 @@ const GamePage = () => {
 				updatedGameData.won = result.status === 'win'
 				updatedGameData.wordOfTheDay = result.word
 				updatedGameData.aboutWord = result.aboutWord
-				// Ensure submittedUsers is updated in the local state
-				updatedGameData.submittedUsers = [
-					...(gameData.submittedUsers || []),
-					user?.id!,
-				]
-
-				await setGameData(updatedGameData)
-			}
+                                await setGameData(updatedGameData)
+                        }
 
 			return {
 				status: result.status,
@@ -382,15 +353,10 @@ const GamePage = () => {
 		}
 	}
 
-	const handleKeyPress = async (key: string) => {
-		// If current user has already submitted, don't allow any more interactions
-		if (currentUserHasSubmitted && !gameData.finished) {
-			return
-		}
-
-		if (!isMappableKey(key)) {
-			return await handleNewCharacter(key)
-		}
+        const handleKeyPress = async (key: string) => {
+                if (!isMappableKey(key)) {
+                        return await handleNewCharacter(key)
+                }
 
 		switch (key) {
 			case 'backspace':
@@ -565,36 +531,7 @@ const GamePage = () => {
 					</motion.div>
 				)}
 
-				{/* User already submitted message */}
-				{!gameData.finished && currentUserHasSubmitted && (
-					<motion.div
-						initial={{ opacity: 0, y: -20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-						className='mb-6 px-6 py-5 rounded-xl shadow-lg text-center bg-gradient-to-br from-amber-50/90 to-orange-50/90 dark:from-zinc-800/90 dark:to-zinc-900/90 border border-brand-orange/20 dark:border-brand-orange/20 backdrop-blur-sm'
-					>
-						<div className='flex flex-col items-center'>
-							<h3 className='text-xl font-bold text-brand-orange mb-3 drop-shadow-sm'>
-								Your Guess is Locked In
-							</h3>
-
-							<p className='text-zinc-700 dark:text-zinc-300 max-w-md mb-3 leading-relaxed'>
-								You've made your contribution for the {formattedDate} puzzle.
-								Now it's time for others to join the challenge!
-							</p>
-
-							{gameData.trashTalk && (
-								<div className='mt-2 p-3 bg-white/50 dark:bg-zinc-800/50 rounded-lg border border-brand-orange/10 dark:border-brand-orange/10 max-w-md backdrop-blur-sm'>
-									<p className='text-sm italic text-brand-orange'>
-										"{gameData.trashTalk}"
-									</p>
-								</div>
-							)}
-						</div>
-					</motion.div>
-				)}
-
-				{/* Game state message */}
+                                {/* Game state message */}
 				{gameData.finished && (
 					<motion.div
 						initial={{ opacity: 0, scale: 0.9 }}
@@ -662,13 +599,13 @@ const GamePage = () => {
 								your keyboard to type
 							</p>
 						</div>
-						<Keyboard
-							onKeyPress={handleKeyPress}
-							usedKeys={usedKeys}
-							disabled={gameData.finished || currentUserHasSubmitted}
-						/>
-					</motion.div>
-				</div>
+                                                <Keyboard
+                                                        onKeyPress={handleKeyPress}
+                                                        usedKeys={usedKeys}
+                                                        disabled={gameData.finished}
+                                                />
+                                        </motion.div>
+                                </div>
 			</div>
 		</Page>
 	)
