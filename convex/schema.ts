@@ -40,9 +40,10 @@ export default defineSchema({
 		}),
 		finished: v.boolean(),
 		attempts: v.number(),
-		won: v.boolean(),
-		wordOfTheDay: v.optional(v.string()),
-		aboutWord: v.optional(v.string()),
+                won: v.boolean(),
+                wordOfTheDay: v.optional(v.string()),
+                aboutWord: v.optional(v.string()),
+                submittedUsers: v.optional(v.array(v.string())),
                 trashTalk: v.optional(v.string()),
         }).index('by_date', ['date']),
 	winners: defineTable({
